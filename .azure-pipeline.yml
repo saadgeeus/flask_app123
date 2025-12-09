@@ -1,0 +1,54 @@
+# ============================================
+#       PYTHON FLASK CI/CD (Self-Hosted)
+# ============================================
+
+trigger:
+- main     # jis branch se deploy karna hai
+
+pool:
+  name: 'Default'      # <-- tumhara pool name
+
+variables:
+  webAppName: 'your-flask-webapp'          # Azure Web App ka naam
+  azureSubscription: 'your-service-connection'   # Azure DevOps service connection
+
+steps:
+
+# -----------------------------------------
+# 1. Use Local Python (Self-Hosted → Fast)
+# -----------------------------------------
+- script: |
+    python --version
+    pip --version
+  displayName: 'Verify Local Python'
+
+# -----------------------------------------
+# 2. Install Dependencies (Cached on Agent)
+# -----------------------------------------
+- script: |
+    pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install Flask Requirements'
+
+# -----------------------------------------
+# 3. Create Deployment ZIP
+# -----------------------------------------
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/python_app.zip'
+    replaceExistingArchive: true
+  displayName: 'Create Deployment ZIP'
+
+# -----------------------------------------
+# 4. Deploy to Azure Web App (Linux)
+# -----------------------------------------
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(Build.ArtifactStagingDirectory)/python_app.zip'
+  displayName: 'Deploy to Azure App Service'
