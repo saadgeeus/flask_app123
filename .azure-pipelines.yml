@@ -2,7 +2,6 @@ trigger:
   - main  # ya master, jis branch pe aap deploy karna chahte hain
 
 pool:
-  vmImage: 'ubuntu-latest'
   name: 'Default'
 
 variables:
