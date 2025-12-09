@@ -9,7 +9,7 @@ pool:
   name: 'Default'      # <-- tumhara pool name
 
 variables:
-  webAppName: 'your-flask-webapp'          # Azure Web App ka naam
+  webAppName: 'flask-web-app'          # Azure Web App ka naam
   azureSubscription: 'sc-python-flask'   # Azure DevOps service connection
 
 steps:
