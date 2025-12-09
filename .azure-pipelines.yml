@@ -1,0 +1,39 @@
+trigger:
+  - main  # ya master, jis branch pe aap deploy karna chahte hain
+
+pool:
+  vmImage: 'ubuntu-latest'
+  name: 'Default'
+
+variables:
+  webAppName: 'flask-web-app'        # jo aapne Azure mein create kiya
+  azureSubscription: 'sc-python-flask'  # as in Azure DevOps service connection
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'      # ya jis version se match ho aapka local app
+  displayName: 'Use Python 3.10'
+
+- script: |
+    python -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements.txt
+  displayName: 'Install dependencies'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+    replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appType: 'webAppLinux'
+    appName: '$(webAppName)'
+    package: '$(Build.ArtifactStagingDirectory)/app.zip'
+  displayName: 'Deploy to Azure Web App'
