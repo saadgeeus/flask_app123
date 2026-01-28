@@ -1,16 +1,16 @@
-# flask-app-ecs
+💪 # flask-app-ecs
 ---
-## Simple flask app to be run
+📲 ## Simple flask app to be run
 ---
 🔗 [Clone Repo](https://github.com/saadgeeus/flask_app123.git)
 ```bash
 ls -ll
 ```
-📂
+📂 Goto Folder:
 ```bash
 cd flask-app-ecs/
 ```
-🐋 :docker: 
+🐋 Dockerfile:
 ```bash
 vim Dockerfile
 ```
@@ -20,13 +20,14 @@ ls -ll
 ```bash
 cat app.py
 ```
+📝 Modify:
 ```bash
 vim app.py
 ```
 ```bash
 cat run.py
 ```
-🐋
+📦
 ```bash
 docker build -t flask-app .
 ```
